@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public final class EasyDateTimeFormatter {
-    public static LocalDateTime format(String input) {
+public abstract class EasyDateTimeFormatter {
+    public LocalDateTime format(String input) {
         LocalDateTime output = null;
 
         // Check against predefined patterns
-        for (DateTimeFormatter formatter : EasyDateTimeFormatter.getAvailableDateTimeFormatters()) {
+        for (DateTimeFormatter formatter : getAvailableDateTimeFormatters()) {
             try {
                 output = LocalDateTime.parse(input, formatter);
                 System.out.println("Pattern matched: " + getPattern(formatter));
@@ -24,7 +24,7 @@ public final class EasyDateTimeFormatter {
             return output;
     }
 
-    private static List<DateTimeFormatter> getAvailableDateTimeFormatters() {
+    private List<DateTimeFormatter> getAvailableDateTimeFormatters() { // TODO: extend this for custom date times
         return List.of(
                 // Predefined DateTimeFormatters
                 DateTimeFormatter.ISO_LOCAL_DATE,
@@ -45,11 +45,14 @@ public final class EasyDateTimeFormatter {
                 // Custom DateTimeFormatters
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"),
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S Z"),
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S z")
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S z")//,
+//                getCustomDateTimePatterns()
         );
     }
 
-    private static String getPattern(DateTimeFormatter formatter) {
+    protected abstract List<String> getCustomDateTimePatterns();
+
+    private String getPattern(DateTimeFormatter formatter) { // TODO: Fix this because equals doesn't seem to work
         if (DateTimeFormatter.ISO_LOCAL_DATE.equals(formatter)) {
             return "yyyy-MM-dd'"; // 2011-12-03
         } else if (DateTimeFormatter.ISO_OFFSET_DATE.equals(formatter)) {
